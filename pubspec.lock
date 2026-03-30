@@ -2,11 +2,11 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   asobi:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: "."
       ref: main
-      resolved-ref: da3e178855475ff9387ba899bf1c5eb0cd76dd56
+      resolved-ref: d8ecf1cb60592e72bcae55fd77cca028317aac7d
       url: "https://github.com/widgrensit/asobi-dart.git"
     source: git
     version: "0.1.0"
@@ -74,6 +74,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.22.0"
+  flame_asobi:
+    dependency: "direct main"
+    description:
+      path: "../flame_asobi"
+      relative: true
+    source: path
+    version: "0.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
