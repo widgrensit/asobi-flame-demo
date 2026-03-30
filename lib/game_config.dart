@@ -1,4 +1,4 @@
-import 'package:asobi/asobi.dart';
+import 'package:flame_asobi/flame_asobi.dart';
 
 class GameConfig {
   static const host = 'localhost';
