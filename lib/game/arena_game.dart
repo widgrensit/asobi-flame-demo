@@ -12,7 +12,7 @@ const double arenaWidth = 800;
 const double arenaHeight = 600;
 const double ppu = 50; // pixels per unit
 
-class ArenaGame extends FlameGame with KeyboardEvents, MouseMovementDetector {
+class ArenaGame extends FlameGame with KeyboardEvents, MouseMovementDetector, TapCallbacks {
   final void Function(Map<String, dynamic> result) onMatchFinished;
 
   final Map<String, _PlayerSprite> _players = {};
@@ -20,6 +20,7 @@ class ArenaGame extends FlameGame with KeyboardEvents, MouseMovementDetector {
   Map<String, dynamic> _latestState = {};
   Vector2 _mouseWorld = Vector2.zero();
   final Set<LogicalKeyboardKey> _keysPressed = {};
+  bool _mouseDown = false;
   String _myId = '';
 
   // HUD
@@ -114,12 +115,28 @@ class ArenaGame extends FlameGame with KeyboardEvents, MouseMovementDetector {
     _mouseWorld = camera.viewfinder.globalToLocal(info.eventPosition.global);
   }
 
+  @override
+  void onTapDown(TapDownEvent event) {
+    _mouseDown = true;
+    _mouseWorld = camera.viewfinder.globalToLocal(event.canvasPosition);
+  }
+
+  @override
+  void onTapUp(TapUpEvent event) {
+    _mouseDown = false;
+  }
+
+  @override
+  void onTapCancel(TapCancelEvent event) {
+    _mouseDown = false;
+  }
+
   void _sendInput() {
     final up = _keysPressed.contains(LogicalKeyboardKey.keyW);
     final down = _keysPressed.contains(LogicalKeyboardKey.keyS);
     final left = _keysPressed.contains(LogicalKeyboardKey.keyA);
     final right = _keysPressed.contains(LogicalKeyboardKey.keyD);
-    final shoot = _keysPressed.contains(LogicalKeyboardKey.space);
+    final shoot = _mouseDown || _keysPressed.contains(LogicalKeyboardKey.space);
 
     if (!(up || down || left || right || shoot)) return;
 
@@ -204,7 +221,7 @@ class ArenaGame extends FlameGame with KeyboardEvents, MouseMovementDetector {
       if (!_projectiles.containsKey(id)) {
         final color = owner == _myId ? const Color(0xFFFFFF00) : const Color(0xFFFFFFFF);
         final circle = CircleComponent(
-          radius: 0.1,
+          radius: 0.15,
           paint: Paint()..color = color,
           position: pos,
           anchor: Anchor.center,
