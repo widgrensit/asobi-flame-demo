@@ -107,4 +107,4 @@ Flutter screens handle UI (login, lobby, results). The arena is a Flame `FlameGa
 |-----|--------|
 | W/A/S/D | Move |
 | Mouse | Aim |
-| Space | Shoot |
+| Left Click / Space | Shoot |
