@@ -20,7 +20,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
   }
 
   Future<void> _submitAndFetch() async {
-    final result = GameConfig.matchResult;
+    final payload = GameConfig.matchResult;
+    final result = payload['result'] as Map<String, dynamic>? ?? {};
     final standings = result['standings'] as List<dynamic>? ?? [];
     final myId = GameConfig.client.playerId ?? '';
 
@@ -48,13 +49,14 @@ class _ResultsScreenState extends State<ResultsScreen> {
       }
       if (mounted) setState(() => _leaderboardText = lines.join('\n'));
     } catch (e) {
-      if (mounted) setState(() => _leaderboardText = 'Failed to load leaderboard');
+      if (mounted) setState(() => _leaderboardText = 'Failed to load leaderboard: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final result = GameConfig.matchResult;
+    final payload = GameConfig.matchResult;
+    final result = payload['result'] as Map<String, dynamic>? ?? {};
     final standings = result['standings'] as List<dynamic>? ?? [];
     final winner = result['winner'] as String? ?? '';
     final myId = GameConfig.client.playerId ?? '';
