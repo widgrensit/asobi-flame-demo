@@ -8,5 +8,8 @@ class GameConfig {
 
   static final client = AsobiClient(host, port: port);
 
-  static Map<String, dynamic> matchResult = {};
+  static Map<String, dynamic>? matchResult;
+  static int currentRound = 1;
+  static String currentModifier = '';
+  static List<Map<String, dynamic>> activeBoons = [];
 }

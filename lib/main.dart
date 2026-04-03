@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
+import 'theme.dart';
 
 void main() {
   runApp(const AsobiArenaApp());
@@ -11,11 +12,9 @@ class AsobiArenaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Asobi Arena Demo',
+      title: 'Asobi Arena',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color(0xFF1A1A26),
-      ),
+      theme: NavalTheme.themeData,
       home: const LoginScreen(),
     );
   }

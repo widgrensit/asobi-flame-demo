@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../game_config.dart';
+import '../theme.dart';
 import 'lobby_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -65,22 +66,44 @@ class _LoginScreenState extends State<LoginScreen> {
           width: 400,
           padding: const EdgeInsets.all(40),
           decoration: BoxDecoration(
-            color: const Color(0xFF262633),
+            color: NavalTheme.surface,
             borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: NavalTheme.primary.withValues(alpha: 0.2),
+            ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('ASOBI ARENA', style: TextStyle(fontSize: 42)),
-              const SizedBox(height: 20),
+              const Text(
+                'ASOBI ARENA',
+                style: TextStyle(
+                  fontSize: 42,
+                  fontWeight: FontWeight.bold,
+                  color: NavalTheme.primary,
+                  letterSpacing: 4,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Naval Combat',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: NavalTheme.secondary,
+                  letterSpacing: 2,
+                ),
+              ),
+              const SizedBox(height: 28),
               TextField(
                 controller: _usernameController,
+                style: const TextStyle(color: NavalTheme.text),
                 decoration: const InputDecoration(hintText: 'Username'),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
+                style: const TextStyle(color: NavalTheme.text),
                 decoration: const InputDecoration(hintText: 'Password'),
               ),
               const SizedBox(height: 20),
@@ -90,8 +113,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ElevatedButton(
                     onPressed: _busy ? null : _login,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.cyanAccent,
-                      foregroundColor: Colors.black,
+                      backgroundColor: NavalTheme.primary,
+                      foregroundColor: NavalTheme.background,
                       minimumSize: const Size(130, 40),
                     ),
                     child: const Text('LOGIN'),
@@ -100,8 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ElevatedButton(
                     onPressed: _busy ? null : _register,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.greenAccent,
-                      foregroundColor: Colors.black,
+                      backgroundColor: NavalTheme.tertiary,
+                      foregroundColor: NavalTheme.background,
                       minimumSize: const Size(130, 40),
                     ),
                     child: const Text('REGISTER'),
@@ -109,7 +132,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              Text(_status, style: const TextStyle(color: Colors.yellow, fontSize: 14)),
+              Text(
+                _status,
+                style: const TextStyle(color: NavalTheme.error, fontSize: 14),
+              ),
             ],
           ),
         ),
