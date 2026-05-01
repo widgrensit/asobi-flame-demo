@@ -1,0 +1,8 @@
+# Local development overrides — pin flame_asobi + asobi to local
+# checkouts so changes propagate without a publish step.
+# Remove (or git-ignore) once flame_asobi 0.2.0 / asobi 0.2.0 ship to pub.dev.
+dependency_overrides:
+  asobi:
+    path: ../asobi-dart
+  flame_asobi:
+    path: ../flame_asobi

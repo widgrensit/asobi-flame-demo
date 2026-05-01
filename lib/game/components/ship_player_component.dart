@@ -7,7 +7,7 @@ import '../../theme.dart';
 
 enum ShipDirection { down, left, right, up }
 
-class ShipPlayerComponent extends AsobiPlayer {
+class ShipPlayerComponent extends PositionComponent with AsobiPlayer {
   static const int _cols = 3;
   static const double _frameW = 52;
   static const double _frameH = 53;
@@ -21,14 +21,18 @@ class ShipPlayerComponent extends AsobiPlayer {
   int _frameIndex = 0;
 
   ShipPlayerComponent({
-    required super.playerId,
-    required super.isLocal,
+    required String playerId,
+    required bool isLocal,
   }) : super(
           size: Vector2(
             _frameW * _animScale / 50,
             _frameH * _animScale / 50,
           ),
-        );
+          anchor: Anchor.center,
+          priority: 5,
+        ) {
+    initPlayer(id: playerId, local: isLocal);
+  }
 
   @override
   Future<void> onLoad() async {
@@ -79,13 +83,11 @@ class ShipPlayerComponent extends AsobiPlayer {
 
   @override
   void render(Canvas canvas) {
-    // Draw sprite instead of circle
     if (_frames.isNotEmpty) {
       final sprite = _frames[_direction]![_frameIndex];
       sprite.render(canvas, size: size);
     }
 
-    // HP bar
     final barWidth = size.x;
     const barHeight = 0.06;
     const barY = -0.15;
@@ -102,7 +104,6 @@ class ShipPlayerComponent extends AsobiPlayer {
       Paint()..color = hpColor,
     );
 
-    // Name tag
     final tp = TextPainter(
       text: TextSpan(
         text: label,
