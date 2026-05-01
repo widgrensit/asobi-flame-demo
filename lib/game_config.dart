@@ -2,7 +2,7 @@ import 'package:flame_asobi/flame_asobi.dart';
 
 class GameConfig {
   static const host = 'localhost';
-  static const port = 8084;
+  static const port = 8085;
   static const gameMode = 'arena';
   static const leaderboardId = 'arena_kills';
 
