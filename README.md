@@ -1,12 +1,12 @@
 # Asobi Arena Demo (Flame)
 
-Top-down arena shooter demo for the [Asobi](https://github.com/widgrensit/asobi) game backend, built with [Flame](https://flame-engine.org/) (Flutter 2D game engine) and the [asobi-dart](https://github.com/widgrensit/asobi-dart) SDK.
+Top-down arena shooter demo for the [Asobi](https://github.com/widgrensit/asobi) game backend, built with [Flame](https://flame-engine.org/) (Flutter 2D engine) and the [flame_asobi](https://github.com/widgrensit/flame_asobi) bridge package.
 
 ## Game Flow
 
 1. **Login** — Register or login with username/password (Flutter UI)
 2. **Lobby** — Connect via WebSocket, find match through matchmaker (Flutter UI)
-3. **Arena** — WASD movement, mouse aim + space to shoot, 90-second rounds (Flame game)
+3. **Arena** — WASD movement, mouse aim + click/space to shoot, 90-second rounds (Flame game)
 4. **Results** — Match standings, leaderboard submission, play again or quit (Flutter UI)
 
 ## Setup
@@ -14,8 +14,14 @@ Top-down arena shooter demo for the [Asobi](https://github.com/widgrensit/asobi)
 ### Prerequisites
 
 - [Flutter](https://flutter.dev/) 3.x+
-- [asobi](https://github.com/widgrensit/asobi) backend running on `localhost:8084`
-- [asobi_arena](https://github.com/widgrensit/asobi_arena) game mode registered
+- An [`asobi_arena_lua`](https://github.com/widgrensit/asobi_arena_lua) backend running locally:
+
+   ```bash
+   git clone https://github.com/widgrensit/asobi_arena_lua
+   cd asobi_arena_lua && docker compose up -d
+   ```
+
+   Server listens on `http://localhost:8085`. (This demo plays the *full* arena game — boons, modifiers, voting, bots — so it needs the arena Lua, not the minimal [`sdk_demo_backend`](https://github.com/widgrensit/sdk_demo_backend).)
 
 #### Linux
 
@@ -26,7 +32,6 @@ sudo apt install cmake ninja-build clang pkg-config libgtk-3-dev
 #### macOS
 
 ```bash
-# Xcode command line tools (if not already installed)
 xcode-select --install
 ```
 
@@ -37,35 +42,14 @@ Install [Visual Studio](https://visualstudio.microsoft.com/) with the "Desktop d
 ### Run
 
 ```bash
-# Install dependencies
 flutter pub get
 
-# Run on Linux
-flutter run -d linux
-
-# Run on macOS
-flutter run -d macos
-
-# Run on Windows
-flutter run -d windows
-
-# Run on Chrome (web)
-flutter run -d chrome
+flutter run -d linux     # or -d macos / -d windows / -d chrome
 ```
 
-### Start the Backend
+### Two clients
 
-In a separate terminal, start the asobi_arena backend:
-
-```bash
-cd /path/to/asobi_arena
-docker compose up -d    # Start PostgreSQL
-rebar3 shell            # Start the backend on port 8084
-```
-
-### Run Two Clients
-
-Matchmaking requires at least 2 players. Open two terminals:
+Matchmaking needs 2 players. Run the app twice, register two different usernames, click **FIND MATCH** in both:
 
 ```bash
 # Terminal 1
@@ -75,11 +59,9 @@ flutter run -d linux
 flutter run -d linux
 ```
 
-Register with different usernames in each window, then click "FIND MATCH" in both.
-
 ## Architecture
 
-Flutter screens handle UI (login, lobby, results). The arena is a Flame `FlameGame` that receives server state at 10Hz via WebSocket and renders players, projectiles, and HUD. Server-authoritative — the client only renders state received from the backend.
+Flutter screens handle UI (login, lobby, results). The arena is a Flame `FlameGame` using the [flame_asobi](https://github.com/widgrensit/flame_asobi) mixins (`HasAsobi`, `HasAsobiMatchmaker`, `HasAsobiInput`, `AsobiNetworkSync`). Server-authoritative — the client only renders state received from the backend at 10 Hz.
 
 ```
 ┌─────────────────────────────────────┐
@@ -89,15 +71,13 @@ Flutter screens handle UI (login, lobby, results). The arena is a Flame `FlameGa
 │                                     │
 │  ┌─────────────────────────────┐    │
 │  │     Flame FlameGame         │    │
-│  │  Canvas rendering at 60fps  │    │
-│  │  Server state sync at 10Hz  │    │
+│  │  Canvas at 60 fps           │    │
+│  │  Server state at 10 Hz      │    │
 │  └─────────────────────────────┘    │
 │                                     │
-│  ◄── ResultsScreen ◄───────────    │
+│  ◄── ResultsScreen ◄───────────     │
 │                                     │
-│  asobi-dart SDK (pure Dart)         │
-│  ├── HTTP (auth, leaderboards)      │
-│  └── WebSocket (matchmaker, game)   │
+│  flame_asobi (mixins) → asobi-dart  │
 └─────────────────────────────────────┘
 ```
 
