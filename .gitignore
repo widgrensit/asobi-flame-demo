@@ -41,3 +41,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local dev overrides (point asobi/flame_asobi to local checkouts)
+pubspec_overrides.yaml
